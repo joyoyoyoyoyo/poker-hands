@@ -9,7 +9,7 @@ final case class Player2(cards: Set[String]) extends Player
 object PokerGame {
   def apply(game: String): (Player1, Player2) = {
     val cards = game.trim.split(" ")
-    (Player1(cards.drop(5).toSet), Player2(cards.drop(5).toSet))
+    (Player1(cards.take(5).toSet), Player2(cards.takeRight(5).toSet))
   }
 }
 
