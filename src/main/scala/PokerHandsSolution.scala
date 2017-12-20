@@ -64,9 +64,11 @@ object Hand {
   def isRoyalFlush(hand: Seq[Card]) = ???
 }
 case class RoyalFlush(hand: Seq[Card]) {
+  private val sortedHand = hand.sortBy(_.value)
   private val royalCardSeq = Seq(Ten, Jack, Queen, King, Ace)
-  def isRoyal: Boolean = royalCardSeq.forall(royalCard => hand.exists(playerCard => playerCard.value == royalCard))
-  def isFlush: Boolean = hand.groupBy(_.suit).size == 1
+  def isRoyal: Boolean = royalCardSeq.forall(royalCard => sortedHand.exists(playerCard => playerCard.value == royalCard))
+  def isFlush: Boolean = sortedHand.groupBy(_.suit).size == 1
+  def isStraight: Boolean = ???
 
 
 }
