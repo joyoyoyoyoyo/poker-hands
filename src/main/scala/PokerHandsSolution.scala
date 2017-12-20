@@ -7,31 +7,74 @@ case object Diamonds extends Suit
 case object Spades extends Suit
 case object Clubs extends Suit
 
-case class Card(value: Int, suite: Suit)
-sealed case class Value(number: Int) extends Ordered[Value] {
+case class Card(value: Value, suit: Suit)
+case class Value(number: Int) extends Ordered[Value] {
   override def compare(that: Value): Int = this.number - that.number
 }
 
-object One extends Value(1)
-object Two extends Value(2)
-object Three extends Value(3)
-object Four extends Value(5)
-object Five extends Value(7)
-object Six extends Value(11)
-object Seven extends Value(13)
-object Eight extends Value(17)
-object Nine extends Value(19)
-object Ten extends Value(23)
-object Jack extends Value(29)
-object Queen extends Value(31)
-object King extends Value(37)
-object Ace extends Value(41)
+case object Two extends Value(2)
+case object Three extends Value(3)
+case object Four extends Value(5)
+case object Five extends Value(7)
+case object Six extends Value(11)
+case object Seven extends Value(13)
+case object Eight extends Value(17)
+case object Nine extends Value(19)
+case object Ten extends Value(23)
+case object Jack extends Value(29)
+case object Queen extends Value(31)
+case object King extends Value(37)
+case object Ace extends Value(41)
+
+object Deck {
+  val cardSuit = Map(
+    'H' -> Hearts,
+    'C' -> Clubs,
+    'D' -> Diamonds,
+    'S' -> Spades
+  )
+
+  val cardNumber = Map(
+    '2' -> Two,
+    '3' -> Three,
+    '4' -> Four,
+    '5' -> Five,
+    '6' -> Six,
+    '7' -> Seven,
+    '8' -> Eight,
+    '9' -> Nine,
+    'T' -> Ten,
+    'J' -> Jack,
+    'Q' -> Queen,
+    'K' -> King,
+    'A' -> Ace
+  )
+}
+
+object Hand {
+  def getHand(cards: Seq[String]) = {
+    val hand = for {
+      card <- cards
+      suit = Deck.cardSuit(card(1))
+      number = Deck.cardNumber(card(0))
+    } yield Card(number, suit)
+    val sortedHand = hand.sortBy(_.value)
+  }
+
+  def isRoyalFlush(hand: Seq[Card]) = ???
+}
+case class RoyalFlush(hand: Seq[Card]) {
+  private val royalCardSeq = Seq(Ten, Jack, Queen, King, Ace)
+  def isRoyal: Boolean = royalCardSeq.forall(royalCard => hand.exists(playerCard => playerCard.value == royalCard))
+  def isFlush: Boolean = hand.groupBy(_.suit).size == 1
+
+
+}
 
 
 sealed trait Player {
   def cards: Set[String]
   def rank: BigInt = cards.foldLeft(BigInt(1))((hash, card) => PokerGame.ranks(card.charAt(0)) * hash)
-
 }
 final case class Player1(cards: Set[String]) extends Player {
 }
